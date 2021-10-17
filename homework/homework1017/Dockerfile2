@@ -1,0 +1,16 @@
+# 使用golang作为基础镜像（轻量级）
+FROM golang:alpine
+
+# 切换工作目录
+WORKDIR /work
+
+# 将本地的文件都拷贝到 /app 目录下
+COPY . .
+
+# 运行并编译项目
+RUN GOOS=linux GOARCH=amd64 go build -o http_server main.go
+
+# 暴露监听端口
+EXPOSE 8080
+
+CMD ["/work/http_server"]
