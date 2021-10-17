@@ -1,9 +1,16 @@
-FROM ubuntu
-ENV MY_SERVICE_PORT=80
-ENV MY_SERVICE_PORT1=80
-ENV MY_SERVICE_PORT2=80
-ENV MY_SERVICE_PORT3=80
-LABEL multi.label1="value1" multi.label2="value2" other="value3"
-ADD bin/amd64/httpserver /httpserver
-EXPOSE 80
-ENTRYPOINT /httpserver
+# 使用golang作为基础镜像（轻量级）
+FROM golang:alpine
+
+# 切换工作目录
+WORKDIR /work
+
+# 将本地文件拷贝到 /work 目录下
+COPY . .
+
+# 编译项目
+RUN GOOS=linux GOARCH=amd64 go build -o http_server main.go
+
+# 暴露监听端口
+EXPOSE 8080
+
+CMD ["/work/http_server"]
